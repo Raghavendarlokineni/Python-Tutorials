@@ -1,26 +1,26 @@
 """
-module demonstrates the operations on files and directories using
-the python library SHUTIL. It covers the important functions which
-were generally used.
+module demonstrates the operations on files and directories using the python 
+library SHUTIL. This covers the important functions which were generally used.
 """
 
 import shutil
 
 """
-copyfile will create a copy of the SRC and returns the new file created.
+shutil.copyfile will create a copy of the SRC and returns the new file created.
 OUTPUT : D:/documents/pancard_copy.pdf
 """
 src = "D:/documents/pancard.pdf"
 dst = "D:/documents/pancard_copy.pdf"
-#print(shutil.copyfile(src, dst))
+print(shutil.copyfile(src, dst))
 
 """
 shutil.copy will create a copy of the file using the same filename if it has
 mentioned.
 OUTPUT : D:/documents/bank_doc\pancard.pdf
 """
+src = "D:/documents/pancard.pdf"
 dst = "D:/documents/bank_doc"
-#print(shutil.copy(src, dst))
+print(shutil.copy(src, dst))
 
 """
 shutil.copytree will create a copy of the directory which doesn't exist.
@@ -28,28 +28,29 @@ OUTPUT : D:/Automation_copy
 """
 src = "D:/Automation"
 dst = "D:/Automation_copy"
-#print(shutil.copytree(src,dst))
+print(shutil.copytree(src,dst))
 
 """
-shutil.rmtree will delete entire directory
+shutil.rmtree will delete entire directory.
 OUTPUT : None(if the deletion is success)
 """
 path = "D:/Automation_copy"
-#print(shutil.rmtree(path))
+print(shutil.rmtree(path))
 
 """
-shutil.move moves a file or directory to another location and returns destination
+shutil.move moves a file or directory to another location and returns 
+destination.
 OUTPUT : D:/Automation_New
 """
 src = "D:/Automation"
 dst = "D:/Automation_New"
-#print(shutil.move(src,dst))
+print(shutil.move(src,dst))
 
 """
 shutil.disk_usage gives the statistics of the following info in bytes:
 OUTPUT : usage(total=365307097088, used=59445481472, free=305861615616)
 """
-#print(shutil.disk_usage("D:/documents"))
+print(shutil.disk_usage("D:/documents"))
 
 """
 shutil.make_archive creates the archive in the following formats:
@@ -68,7 +69,7 @@ base_dir - dir name for which archive needs to be created.
 
 """
 print(shutil.make_archive("C:/SIP", "zip", "D:/", "SIP"))
-#print(shutil.get_terminal_size())
+
 print(shutil.unpack_archive("C:/SIP.zip", "C:/", "zip"))
 
 
