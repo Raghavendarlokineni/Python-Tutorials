@@ -92,3 +92,25 @@ OUTPUT : {'place': 'INDIA', 'age': '21', 'name': 'Raghu'}
 NOTE : Items in a dictionary are not stored in an order, so everytime you try
 to access the items, they are displayed in different order each time.
 """
+
+"""
+A practical example of setdefault() fucntions is illustrated below.
+"""
+import pprint
+
+message = "Success comes to those who have the will power to win over\
+           their snooze buttons "
+dict1 = {}
+
+for char in message:
+    dict1.setdefault(char, 0)
+    dict1[char] += 1
+
+pprint.pprint(dict1)
+
+"""
+pprint python library helps in displaying the nested structures in a 
+proper format.
+The same output can be also stored using pformat function as follows:
+pprint.pformat(dict1)
+"""
