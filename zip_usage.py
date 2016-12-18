@@ -56,35 +56,3 @@ subject :  science || marks :  67 || result :  grade2
 subject :  social || marks :  89 || result :  grade1
 
 """
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
