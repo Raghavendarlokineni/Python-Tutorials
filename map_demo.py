@@ -1,5 +1,5 @@
 """
-Is a in-built function which takes 2 arguments, function and a list.
+map(function, sequence) is a in-built function which takes 2 arguments, function and a list.
 It returns the list of values which are results of that function 
 """
 """
