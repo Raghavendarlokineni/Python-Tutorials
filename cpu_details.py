@@ -1,6 +1,7 @@
 import os
 import sys
 
+print("hello")
 os.system("lscpu > cpu.log")
 
 dict = {}
@@ -8,7 +9,7 @@ with open("cpu.log", "r+") as f:
     for line in f:
         word = line.split(":")
         
-        #using the strip to remove unwanted spaces while stroing the values in dictionary
+        #using the strip to remove unwanted spaces while storing the values in dictionary
         dict[word[0]] = word[1].strip()
 
 if ((len(sys.argv) <= 1) or (len(sys.argv) > 2)):
