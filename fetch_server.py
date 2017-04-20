@@ -1,56 +1,58 @@
 import paramiko
+import string
+from collections import namedtuple
 
-#ip_list input values : ["IP_ADDR", "USERNAME", "PASSWD", "ROOT_PASSWD"]
+Server = namedtuple("Server", "ipaddr username passwd root_passwd")
+
 ip_list = [
-    ["192.168.11.44", "root", "radisys", "radisys"],
-    ["192.168.11.8", "root", "root123", "radisys"],
-    ["192.168.11.30", "root", "root123", "radisys"],
-    ["192.168.11.6", "radisys", "radisys", "radisys"]
+    Server("192.168.11.11", "radisys", "radisys", "radisys"),
+    Server("192.168.11.118", "radisys", "radisys", "radisys")
 ]
 os_check_list = ["DISTRIB_DESCRIPTION"]
-hard_disks = [
-             'sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg',
-             'sdh', 'sdi', 'sdj', 'sdk', 'sdl', 'sdm', 'sdn',
-             'sdo', 'sdp', 'sdq', 'sdr', 'sds'
-             ]
-os = None
+hard_disks = [ 'sd{}'.format(i) for i in string.ascii_lowercase[:19]]
 
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+HEADER = """
+             ************************************************************
 
-for ip in ip_list:
-    ssh.connect(ip[0], username = ip[1], password = ip[2])
+              IP ADDR = {}                SYSTEM INFO                           
 
-    print("\n \n   ************************************************************ \
-           \n   IP ADDR = {}                SYSTEM INFO                           \
-          \n  ******************************************************************". format(ip[0]))
-    stdin, stdout, stderr = ssh.exec_command("cat /etc/*release")
-    stdin.write(ip[3]+"\n")
-    for line in stdout.readlines():
+             ************************************************************* 
+         """
+
+def execute_command(command, ip):
+
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(ip.ipaddr, username=ip.username, password=ip.passwd)
+
+    stdin, stdout, stderr = ssh.exec_command(command, get_pty=True)
+    stdin.write(ip.root_passwd +"\n")
+    
+    return stdout.readlines()
+
+def check_os(output):
+
+    for line in output:
        if any(x in line for x in os_check_list):
-           os_dist = line.split("=")
-           os = os_dist[1]
-           print(" Operating System is {}" .format(os))
-    if not os:
-           stdin, stdout, stderr = ssh.exec_command("cat /etc/system-release")
-           for line in stdout.readlines():
-               os = line
-               print(" Operating System is {}" .format(os))
+           print(" Operating System is {}" .format(line.split("=")[1]))
 
-    os = None
-
-    stdin, stdout, stderr = ssh.exec_command("sudo -k udisksctl status", get_pty = True)
-    stdin.write(ip[3]+"\n")
-    for line in stdout.readlines():
+def disk_status(output):
+    for line in output:
         if any(x in line for x in hard_disks):
             print(line)
         elif "command not found" in line:
             print("udisksctl not installed on target server")
 
-    stdin, stdout, stderr = ssh.exec_command("sudo dmidecode -t 0 | grep -i version", get_pty = True)
-    stdin.write(ip[3]+"\n")
-    for line in stdout.readlines():
+def bios_version(output):
+    for line in output:
         if "Version" in line:
             print(line)
         elif "command not found" in line:
             print("dmidecode not installed on target server")
+
+if __name__ == "__main__":
+     for ip in ip_list:
+         print(HEADER.format(ip.ipaddr))
+         check_os(execute_command("cat /etc/*release", ip))
+         disk_status(execute_command("sudo -k udisksctl status", ip))
+         bios_version(execute_command("sudo dmidecode -t 0 | grep -i version", ip))
