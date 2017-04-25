@@ -1,3 +1,7 @@
+"""
+this module demonstrates how to fetch the system info like, OS version,
+hard disks attached to it and also BIOS version.
+"""
 import paramiko
 import string
 from collections import namedtuple
@@ -8,7 +12,11 @@ ip_list = [
     Server("192.168.11.11", "radisys", "radisys", "radisys"),
     Server("192.168.11.118", "radisys", "radisys", "radisys")
 ]
+
+#using this list to find out the version
 os_check_list = ["DISTRIB_DESCRIPTION"]
+
+#list comprises of hard disk names, like sda, sdb...sds
 hard_disks = [ 'sd{}'.format(i) for i in string.ascii_lowercase[:19]]
 
 HEADER = """
@@ -18,7 +26,7 @@ HEADER = """
 
              ************************************************************* 
          """
-
+#executes the command and returns the output
 def execute_command(command, ip):
 
     ssh = paramiko.SSHClient()
@@ -30,12 +38,14 @@ def execute_command(command, ip):
     
     return stdout.readlines()
 
+#for fetching OS version
 def check_os(output):
 
     for line in output:
        if any(x in line for x in os_check_list):
            print(" Operating System is {}" .format(line.split("=")[1]))
 
+#for fetching disk information
 def disk_status(output):
     for line in output:
         if any(x in line for x in hard_disks):
@@ -43,6 +53,7 @@ def disk_status(output):
         elif "command not found" in line:
             print("udisksctl not installed on target server")
 
+#for fetching BIOS version
 def bios_version(output):
     for line in output:
         if "Version" in line:
