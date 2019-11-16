@@ -9,8 +9,8 @@ from collections import namedtuple
 Server = namedtuple("Server", "ipaddr username passwd root_passwd")
 
 ip_list = [
-    Server("192.168.11.11", "radisys", "radisys", "radisys"),
-    Server("192.168.11.118", "radisys", "radisys", "radisys")
+    Server("192.168.11.11", "****", "****", "****"),
+    Server("192.168.11.118", "****", "****", "****")
 ]
 
 #using this list to find out the version
